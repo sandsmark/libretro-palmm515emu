@@ -1,0 +1,15 @@
+Bootloader says it starts at 0xFFFFFE00 but there is no data(only 0x00) until 0xFFFFFF00.(first 0x100 bytes maybe protected?)
+
+The data at 0xFFFFFF00 pertains only to initializing UART 1 and 2 and trying to copy data and boot over UART.
+
+Bootloader accesses 16 bit WATCHDOG register as 8 bit at 0xFFFFFFC0.(may be a way to force reset if no data is transferred after 3 seconds)
+
+The data sheet says that the bootloader instruction buffer is 32 bytes but its actually 64, a sensible mistake because 64 bytes is 32 normal length 68k instructions.
+
+To enter the bootloader EMUBRK must be held down and a reset performed, this seems impossible for a consumer palm but may be possible by configuring the i/o port as an output, setting that bit to 1 then resetting.
+
+The reset vectors for bootloader mode are unknown but likely 0xFFFFFF00 for stack pointer(stack grows downward) and program counter.
+
+The data from 0xFFFFFFC0 to 0xFFFFFFE4 was put there by Sony and is not part of the stock bootloader.
+
+This dump was taken from a Sony Clie Peg SL-10, I don't actually have a Palm m515, so the instructions at 0xFFFFFFC0 may be wrong.
