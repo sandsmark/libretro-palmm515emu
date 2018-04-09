@@ -10,6 +10,4 @@ To enter the bootloader EMUBRK must be held down and a reset performed, this see
 
 The reset vectors for bootloader mode are unknown but likely 0xFFFFFF00 for stack pointer(stack grows downward) and program counter.
 
-The data from 0xFFFFFFC0 to 0xFFFFFFE4 was put there by Sony and is not part of the stock bootloader.
-
-This dump was taken from a Sony Clie Peg SL-10, I don't actually have a Palm m515, so the instructions at 0xFFFFFFC0 may be wrong.
+The data from 0xFFFFFFC0 to 0xFFFFFFE4 was put there by Sony/Palm and is not part of the stock bootloader.
