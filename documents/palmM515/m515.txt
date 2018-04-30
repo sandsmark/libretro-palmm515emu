@@ -1,0 +1,8 @@
+Palm m515 Hardware:
+CPU: Motorola DragonBall VZ MC68VZ328VF 5K85C CTCTBM0220
+Display Controller: EPSON S1D13706F00A1 F02230396
+Flash: Fairchild 29DL323BE-90PFTN 0208 M75U
+SDRAM: Motorola M2V28S40ATP 21899A1V-6L
+USB Peripheral Controller: Philips PDIUSBD12 04808290 bu0218 A
+Touchscreen Controller: Analog Devices ADS7846
+RS232 Transceiver: Maxim MAX3389E
