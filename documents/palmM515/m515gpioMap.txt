@@ -25,7 +25,7 @@ Port B Pin 2: Unknown
 Port B Pin 3: Unknown
 Port B Pin 4: Unknown
 Port B Pin 5: Unknown
-Port B Pin 6: Unknown
+Port B Pin 6: Alarm LED(xored with the charging state, set high to enable LED when not docked, set low to enable LED when docked)
 Port B Pin 7: Unknown
 Port C Pin 0: Unknown
 Port C Pin 1: Unknown
