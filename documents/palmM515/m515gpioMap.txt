@@ -1,6 +1,6 @@
 General Layout:
 Port A: D* Data Lines
-Port B: Fixed 0x3F, likely nothing attached, probably used for chip select
+Port B: Fixed 0x3F, used for chip select, power button LED and likely audio
 Port C: Usually 0x7F or 0x3F(less common), needs to be investigated further
 Port D: Hardware buttons
 Port E: Always 0x5E or 0x5C, only bit 1 seems used, needs to be investigated further
@@ -19,14 +19,14 @@ Port A Pin 4: Data Line 4(can only be used as a GPIO in 8 bit mode)
 Port A Pin 5: Data Line 5(can only be used as a GPIO in 8 bit mode)
 Port A Pin 6: Data Line 6(can only be used as a GPIO in 8 bit mode)
 Port A Pin 7: Data Line 7(can only be used as a GPIO in 8 bit mode)
-Port B Pin 0: Unknown
-Port B Pin 1: Unknown
-Port B Pin 2: Unknown
-Port B Pin 3: Unknown
-Port B Pin 4: Unknown
-Port B Pin 5: Unknown
+Port B Pin 0: CSB0(chip select line)
+Port B Pin 1: CSB1/SDWE(chip select line)
+Port B Pin 2: CSC0/RAS0(chip select line)
+Port B Pin 3: CSC1/RAS1(chip select line)
+Port B Pin 4: CSD0/CAS0(chip select line)
+Port B Pin 5: Unknown(not used as a chip select line)
 Port B Pin 6: Alarm LED(xored with the charging state, set high to enable LED when not docked, set low to enable LED when docked)
-Port B Pin 7: Unknown
+Port B Pin 7: Unknown(likely audio out)(PWMO1)
 Port C Pin 0: Unknown
 Port C Pin 1: Unknown
 Port C Pin 2: Unknown
@@ -51,8 +51,8 @@ Port E Pin 4: Unknown
 Port E Pin 5: Unknown
 Port E Pin 6: Unknown
 Port E Pin 7: Unknown
-Port F Pin 0: Unknown
-Port F Pin 1: ADS7846 PENIRQ(low when screen is touched)
+Port F Pin 0: Unknown(looks like ADS7846 BUSY)
+Port F Pin 1: ADS7846 PENIRQ(low when screen is touched)(IRQ5)
 Port F Pin 2: Clock Output(required for SED1376 operation, reads and writes do nothing)
 Port F Pin 3: Address Line 20(must be an address line for 16mb RAM to be addressed)
 Port F Pin 4: Address Line 21(must be an address line for 16mb RAM to be addressed)
