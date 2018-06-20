@@ -11,6 +11,7 @@ Port K: Fixed 0x04 in testing, used to select Port Ds active matrix line, bit 4 
 Port M: Fixed 0x23, needs to be investigated further
 
 Pin Mapping(all pins are accounted for, documented or not):
+
 Port A Pin 0: Data Line 0(can only be used as a GPIO in 8 bit mode)
 Port A Pin 1: Data Line 1(can only be used as a GPIO in 8 bit mode)
 Port A Pin 2: Data Line 2(can only be used as a GPIO in 8 bit mode)
@@ -19,71 +20,80 @@ Port A Pin 4: Data Line 4(can only be used as a GPIO in 8 bit mode)
 Port A Pin 5: Data Line 5(can only be used as a GPIO in 8 bit mode)
 Port A Pin 6: Data Line 6(can only be used as a GPIO in 8 bit mode)
 Port A Pin 7: Data Line 7(can only be used as a GPIO in 8 bit mode)
+
 Port B Pin 0: CSB0(chip select line)
 Port B Pin 1: CSB1/SDWE(chip select line)
 Port B Pin 2: CSC0/RAS0(chip select line)
 Port B Pin 3: CSC1/RAS1(chip select line)
 Port B Pin 4: CSD0/CAS0(chip select line)
-Port B Pin 5: Unknown(not used as a chip select line)
+Port B Pin 5: Unknown(GPIO)(OUTPUT)(not used as a chip select line)
 Port B Pin 6: Alarm LED(xored with the charging state, set high to enable LED when not docked, set low to enable LED when docked)
 Port B Pin 7: Unknown(likely audio out)(PWMO1)
-Port C Pin 0: Unknown
-Port C Pin 1: Unknown
-Port C Pin 2: Unknown
-Port C Pin 3: Unknown
-Port C Pin 4: Unknown
-Port C Pin 5: Unknown
-Port C Pin 6: Unknown
-Port C Pin 7: Unknown
+
+Port C Pin 0: Unknown(GPIO)(INPUT)
+Port C Pin 1: Unknown(GPIO)(INPUT)
+Port C Pin 2: Unknown(GPIO)(INPUT)
+Port C Pin 3: Unknown(GPIO)(INPUT)
+Port C Pin 4: Unknown(GPIO)(INPUT)
+Port C Pin 5: Unknown(GPIO)(INPUT)
+Port C Pin 6: Unknown(GPIO)(INPUT)
+Port C Pin 7: Unknown(GPIO)(INPUT)
+
 Port D Pin 0: Button Matrix Input Line 0(INT0)(low when button pressed)
 Port D Pin 1: Button Matrix Input Line 1(INT1)(low when button pressed)
 Port D Pin 2: Button Matrix Input Line 2(INT2)(low when button pressed)
 Port D Pin 3: Button Matrix Input Line 3(INT3)(low when button pressed)
 Port D Pin 4: HotSync Cable Button(IRQ1)(low when button pressed)
 Port D Pin 5: SD Card Status(IRQ2)(low when card is inserted)
-Port D Pin 6: Unknown(IRQ3)
+Port D Pin 6: Unknown(SPECIAL)(IRQ3)(INPUT)
 Port D Pin 7: Battery Critical Interrupt(IRQ6)(low when critical)
+
 Port E Pin 0: SPITXD(used for ADS7846)
 Port E Pin 1: SPIRXD(used for ADS7846)
 Port E Pin 2: SPICLK2(used for ADS7846)
-Port E Pin 3: Unknown
-Port E Pin 4: Unknown
-Port E Pin 5: Unknown
-Port E Pin 6: Unknown
-Port E Pin 7: Unknown
-Port F Pin 0: Unknown(looks like ADS7846 BUSY)
+Port E Pin 3: Unknown(GPIO)(OUTPUT)
+Port E Pin 4: Unknown(RXD1)(SPECIAL)
+Port E Pin 5: Unknown(TXD1)(SPECIAL)
+Port E Pin 6: Unknown(GPIO)(INPUT)
+Port E Pin 7: Unknown(GPIO)(OUTPUT)
+
+Port F Pin 0: Unknown(GPIO)(INPUT)(looks like ADS7846 BUSY)
 Port F Pin 1: ADS7846 PENIRQ(low when screen is touched)(IRQ5)
 Port F Pin 2: Clock Output(required for SED1376 operation, reads and writes do nothing)
 Port F Pin 3: Address Line 20(must be an address line for 16mb RAM to be addressed)
 Port F Pin 4: Address Line 21(must be an address line for 16mb RAM to be addressed)
-Port F Pin 5: Address Line 22(must be an address line for 16mb RAM to be addressed)
-Port F Pin 6: Address Line 23(must be an address line for 16mb RAM to be addressed)
-Port F Pin 7: Unknown
-Port G Pin 0: Unknown
+Port F Pin 5: Unknown(GPIO)(OUTPUT)//Address Line 22(must be an address line for 16mb RAM to be addressed)
+Port F Pin 6: Unknown(GPIO)(INPUT)//Address Line 23(must be an address line for 16mb RAM to be addressed)
+Port F Pin 7: Unknown(GPIO)(INPUT)
+
+Port G Pin 0: Unknown(BUSW/DTACK)(SPECIAL)
 Port G Pin 1: Backlight State Read Back(high when backlight on)
-Port G Pin 2: Unknown
-Port G Pin 3: Unknown
-Port G Pin 4: Unknown
-Port G Pin 5: Unknown
-Port J Pin 0: Unknown
-Port J Pin 1: Unknown
-Port J Pin 2: Unknown
-Port J Pin 3: Unknown
-Port J Pin 4: Unknown
-Port J Pin 5: Unknown
-Port J Pin 6: Unknown
-Port J Pin 7: Unknown
-Port K Pin 0: Unknown
-Port K Pin 1: Unknown
+Port G Pin 2: Unknown(GPIO)(OUTPUT)
+Port G Pin 3: Unknown(GPIO)(OUTPUT)
+Port G Pin 4: Unknown(EMUCS)(SPECIAL)//why is this enabled on a release device?
+Port G Pin 5: Unknown(GPIO)(OUTPUT)
+
+Port J Pin 0: Unknown(SPECIAL when SD card is being accessed, otherwise GPIO)
+Port J Pin 1: Unknown(SPECIAL when SD card is being accessed, otherwise GPIO)
+Port J Pin 2: Unknown(SPECIAL when SD card is being accessed, otherwise GPIO)
+Port J Pin 3: Unknown(GPIO)(OUTPUT)
+Port J Pin 4: Unknown(RXD2)(SPECIAL)
+Port J Pin 5: Unknown(TXD2)(SPECIAL)
+Port J Pin 6: Unknown(RTS2)(SPECIAL)
+Port J Pin 7: Unknown(CTS2)(SPECIAL)
+
+Port K Pin 0: Unknown(GPIO)(OUTPUT)
+Port K Pin 1: Unknown(GPIO)(OUTPUT)
 Port K Pin 2: Battery Charging/Docked(low when charging)
-Port K Pin 3: Unknown
+Port K Pin 3: Unknown(GPIO)(OUTPUT)
 Port K Pin 4: Enable Vibrator Motor(set high to enable)
 Port K Pin 5: Button Matrix Line Select 0(set low to enable line, multiple lines can be enabled at once)
 Port K Pin 6: Button Matrix Line Select 1(set low to enable line, multiple lines can be enabled at once)
 Port K Pin 7: Button Matrix Line Select 2(set low to enable line, multiple lines can be enabled at once)
-Port M Pin 0: Unknown
-Port M Pin 1: Unknown
-Port M Pin 2: Unknown
-Port M Pin 3: Unknown
-Port M Pin 4: Unknown
-Port M Pin 5: Unknown
+
+Port M Pin 0: Unknown(SDCLK)(SPECIAL)
+Port M Pin 1: Unknown(SDCE)(SPECIAL)
+Port M Pin 2: Unknown(DQMH)(SPECIAL)
+Port M Pin 3: Unknown(DQML)(SPECIAL)
+Port M Pin 4: Unknown(SDA10)(SPECIAL)
+Port M Pin 5: Unknown(GPIO)(OUTPUT)
