@@ -83,7 +83,7 @@ Port J Pin 6: Unknown(RTS2)(SPECIAL)
 Port J Pin 7: Unknown(CTS2)(SPECIAL)
 
 Port K Pin 0: Unknown(GPIO)(OUTPUT)
-Port K Pin 1: Unknown(GPIO)(OUTPUT)
+Port K Pin 1: Double Backlight Power(set high to put the backlight in "bright mode", does nothing when backlight is off)
 Port K Pin 2: Battery Charging/Docked(low when charging)
 Port K Pin 3: Unknown(GPIO)(OUTPUT)
 Port K Pin 4: Enable Vibrator Motor(set high to enable)
