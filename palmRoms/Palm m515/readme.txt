@@ -1,1 +1,0 @@
-This ROM was dumped personally but the device it was from had a corrupt list of HotSync methods even after a hard reset and displayed a line of invalid characters and said another application was using the USB port when attempting to sync, so this is a real ROM but it may be slightly corrupt.
