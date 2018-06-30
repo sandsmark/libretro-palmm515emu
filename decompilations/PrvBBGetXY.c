@@ -28,8 +28,16 @@
  ROM:100827F4                 dc.b $8A
  ROM:100827F5 aPrvbbgetxy:    dc.b 'PrvBBGetXY'
 */
-void (*getActualValues)(PointType* dest) = (void (*)(PointType*))0x10081284;
+//stack = old a2(0x4), a6 + 0x18(0x4), 0x0000(0x2), uint16_t[7] ADC values(0xE)
+
+//writes all ADC values(7 * sizeof(uint16_t)) to to the uint16_t buffer
+void (*HwrADC)(uint16_t* dest, uint16_t/*could also be Boolean or uint8_t*/ params) = (void (*)(uint16_t*, uint16_t))0x10081284;
 
 void PrvBBGetXY(PointType* dest){
-   getActualValues(dest);
+   uint16_t values[7];
+   HwrADC(values, 0x0000);
+   //this going on the assumption that structs store their data with the first variable in the highest address growing down, could be wrong
+   //if true this storage method is the oppisite of how the stack grows
+   *dest.x = values[6];
+   *dest.y = values[5];
 }
