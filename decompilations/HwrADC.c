@@ -466,13 +466,13 @@
 */
 
 word HwrADC(unknown_t[]){
-   *((uint8_t*)0xFFFFF431) &= 0xFB;
-   *((uint8_t*)0xFFFFF420) |= 0x01;
-   *((uint8_t*)0xFFFFF421) &= 0xFE;
-   *((uint8_t*)0xFFFFF422) &= 0xFE;
+   *((volatile uint8_t*)0xFFFFF431) &= 0xFB;
+   *((volatile uint8_t*)0xFFFFF420) |= 0x01;
+   *((volatile uint8_t*)0xFFFFF421) &= 0xFE;
+   *((volatile uint8_t*)0xFFFFF422) &= 0xFE;
    
    //alot more here
    
-   *((uint8_t*)0xFFFFF431) |= 0x04;
+   *((volatile uint8_t*)0xFFFFF431) |= 0x04;
    return unknown_t;
 }

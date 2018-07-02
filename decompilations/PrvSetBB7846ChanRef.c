@@ -30,12 +30,12 @@ ROM:10005DEB                 align 4
 uint16_t PrvSetBB7846ChanRef(uint16_t channel){
    uint16_t returnValue;
 
-   *((uint16_t*)0xFFFFF802) = 0x4247;//enables SPI, required for the write to SPIDATA2 to go through
-   *((uint16_t*)0xFFFFF800) = channel & 0xFFFE;
-   *((uint16_t*)0xFFFFF802) = 0x4347;//transfer 8 bits
-   while(*((uint16_t*)0xFFFFF802) & 0x100);//busy wait for transfer to finish
+   *((volatile uint16_t*)0xFFFFF802) = 0x4247;//enables SPI, required for the write to SPIDATA2 to go through
+   *((volatile uint16_t*)0xFFFFF800) = channel & 0xFFFE;
+   *((volatile uint16_t*)0xFFFFF802) = 0x4347;//transfer 8 bits
+   while(*((volatile uint16_t*)0xFFFFF802) & 0x100);//busy wait for transfer to finish
    /*an interrupt occurs here from the transfer finishing if SPI2 is not masked in IMR*/
-   returnValue = *((uint16_t*)0xFFFFF800);
-   *((uint16_t*)0xFFFFF802) = 0xE000;//disable and set clock rate to lowest possible(don't know why since its off anyway)
+   returnValue = *((volatile uint16_t*)0xFFFFF800);
+   *((volatile uint16_t*)0xFFFFF802) = 0xE000;//disable and set clock rate to lowest possible(don't know why since its off anyway)
    return returnValue;
 }

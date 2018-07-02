@@ -45,7 +45,7 @@ ROM:10083B0E                 align $10
 */
 
 void HwrIRQ5Handler(){
-   if(*((uint16_t*)0x00000253) != 0){
+   if(*((volatile uint16_t*)0x00000253) != 0){
       //not done
    }
 }
