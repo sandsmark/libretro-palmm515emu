@@ -465,14 +465,50 @@
  ROM:10081705 aHwradc:        dc.b 'HwrADC'
 */
 
-word HwrADC(unknown_t[]){
+uint16_t HwrADC(uint16_t mode, uint16_t* dataOut){
    *((volatile uint8_t*)0xFFFFF431) &= 0xFB;
    *((volatile uint8_t*)0xFFFFF420) |= 0x01;
    *((volatile uint8_t*)0xFFFFF421) &= 0xFE;
    *((volatile uint8_t*)0xFFFFF422) &= 0xFE;
    
+   switch(mode){
+      case 0:
+         //returns touchscreen x(channel 6) and y(channel 7)
+         break;
+         
+      case 1:
+         break;
+         
+      case 2:
+         //all 0x0000 execpt channel 2 which is 0x001E
+         break;
+         
+      case 3:
+         break;
+         
+      case 4:
+         //only returns touchscreen x position(channel 6), all other values are 0x0000
+         break;
+         
+      case 5:
+         break;
+         
+      case 6:
+         break;
+         
+      case 7:
+         break;
+         
+      case 8:
+         break;
+         
+      default:
+         return 0x502;//sysErrParamErr
+   }
+      
+   
    //alot more here
    
    *((volatile uint8_t*)0xFFFFF431) |= 0x04;
-   return unknown_t;
+   return 0x0000;//errNone
 }

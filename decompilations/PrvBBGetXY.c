@@ -32,7 +32,7 @@
 //allocated data = uint16_t[8] ADC values(0x10)
 
 //writes all ADC values(8 * sizeof(uint16_t)) to to the uint16_t buffer
-void (*HwrADC)(uint16_t/*could also be Boolean or uint8_t*/ params, uint16_t* dest) = (void (*)(uint16_t, uint16_t*))0x10081284;
+void (*HwrADC)(uint16_t/*could also be Boolean or uint8_t*/ mode, uint16_t* dest) = (void (*)(uint16_t, uint16_t*))0x10081284;
 
 void PrvBBGetXY(PointType* dest){
    uint16_t values[8];
