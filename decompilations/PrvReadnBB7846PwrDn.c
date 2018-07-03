@@ -141,7 +141,7 @@ uint16_t PrvReadnBB7846PwrDn(uint16_t unk_int, uint16_t* unk_ptr){
       *((volatile uint16_t*)0xFFFFF802) = 0x4244;
       
       //send 5 bits
-      *((volatile uint16_t*)0xFFFFF800) = unk_ptr[0] << 3;
+      *((volatile uint16_t*)0xFFFFF800) = unk_ptr[0] >> 3;
       *((volatile uint16_t*)0xFFFFF802) = 0x4344;
       
       //busy wait for transfer to complete
