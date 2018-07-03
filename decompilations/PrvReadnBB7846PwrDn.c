@@ -137,8 +137,40 @@ uint16_t PrvReadnBB7846PwrDn(uint16_t unk_int, uint16_t* unk_ptr){
    if(unk_int <= 4){
       uint16_t spi2Data;
       
+      //enable SPI2
+      *((volatile uint16_t*)0xFFFFF802) = 0x4244;
+      
+      //send 5 bits
+      *((volatile uint16_t*)0xFFFFF800) = unk_ptr[0] << 3;
+      *((volatile uint16_t*)0xFFFFF802) = 0x4344;
+      
+      //busy wait for transfer to complete
+      while(*((volatile uint16_t*)0xFFFFF802) & 0x0100);
+      //set d0 to *((volatile uint16_t*)0xFFFFF800)
+      
+      //delay, reason unknown
+      if(unk_ptr[2] != 0)
+         PrvADCDelay(unk_ptr[2]);
+      
+      //may be swapped
+      *((volatile uint16_t*)0xFFFFF802) = (unk_ptr[0] & 0x0008) ? 0x424B : 0x424F;
+      
+      //more here
+      //d0 = d4;
+      //d0++
+      d0 = 1;
+      //d6 is unk_int
+      
       //more here
       
+      //shift out 3 bits, guaranteed to be 0s
+      *((volatile uint16_t*)0xFFFFF800) = 0x0004;
+      *((volatile uint16_t*)0xFFFFF802) = 0x4342;
+      
+      //busy wait for transfer to complete
+      while(*((volatile uint16_t*)0xFFFFF802) & 0x0100);
+      
+      //get value and quit
       spi2Data = *((volatile uint16_t*)0xFFFFF800);
       *((volatile uint16_t*)0xFFFFF802) = 0xE000;
       
