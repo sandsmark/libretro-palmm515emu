@@ -140,7 +140,7 @@ uint16_t PrvReadnBB7846PwrDn(uint16_t unk_int, uint16_t* unk_ptr){
       //enable SPI2
       *((volatile uint16_t*)0xFFFFF802) = 0x4244;
       
-      //send 5 bits
+      //send top 5 bits of control byte
       *((volatile uint16_t*)0xFFFFF800) = unk_ptr[0] >> 3;
       *((volatile uint16_t*)0xFFFFF802) = 0x4344;
       
@@ -152,7 +152,7 @@ uint16_t PrvReadnBB7846PwrDn(uint16_t unk_int, uint16_t* unk_ptr){
       if(unk_ptr[2] != 0)
          PrvADCDelay(unk_ptr[2]);
       
-      //may be swapped
+      //send final 3 bits, wait 1 and receive 8 or 12
       *((volatile uint16_t*)0xFFFFF802) = (unk_ptr[0] & 0x0008) ? 0x424B : 0x424F;
       
       //more here
@@ -163,7 +163,7 @@ uint16_t PrvReadnBB7846PwrDn(uint16_t unk_int, uint16_t* unk_ptr){
       
       //more here
       
-      //shift out 3 bits, guaranteed to be 0s
+      //shift out 3 bits(0b100)
       *((volatile uint16_t*)0xFFFFF800) = 0x0004;
       *((volatile uint16_t*)0xFFFFF802) = 0x4342;
       
