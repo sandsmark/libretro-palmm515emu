@@ -477,10 +477,11 @@ uint16_t HwrADC(uint16_t mode, uint16_t* dataOut){
          break;
          
       case 1:
+         //all 0x0000 execpt channel 1 which is the dock status and channel 2 which in unknown
          break;
          
       case 2:
-         //all 0x0000 execpt channel 2 which is 0x001E
+         //all 0x0000 execpt channel 2 which is 0x001C when docked and 0x00FF when disconnected
          break;
          
       case 3:
@@ -494,6 +495,7 @@ uint16_t HwrADC(uint16_t mode, uint16_t* dataOut){
          break;
          
       case 6:
+         //caused "Fatal Execption"
          break;
          
       case 7:
