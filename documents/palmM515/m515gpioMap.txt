@@ -68,7 +68,7 @@ Port F Pin 7: Unknown(GPIO)(INPUT)
 
 Port G Pin 0: Unknown(BUSW/DTACK)(SPECIAL)
 Port G Pin 1: Backlight State Read Back(high when backlight on)
-Port G Pin 2: Unknown(GPIO)(OUTPUT)
+Port G Pin 2: Unknown(GPIO)(OUTPUT)(is turned off for pen read and turned back on after)
 Port G Pin 3: Unknown(GPIO)(OUTPUT)
 Port G Pin 4: Unknown(EMUCS)(SPECIAL)//why is this enabled on a release device?
 Port G Pin 5: Unknown(GPIO)(OUTPUT)
