@@ -62,7 +62,7 @@ Port F Pin 1: ADS7846 PENIRQ(low when screen is touched)(IRQ5)
 Port F Pin 2: Clock Output(required for SED1376 operation, reads and writes do nothing)
 Port F Pin 3: Address Line 20
 Port F Pin 4: Address Line 21
-Port F Pin 5: Unknown(GPIO)(OUTPUT)
+Port F Pin 5: Unknown(GPIO)(OUTPUT)(may be a software controlled address line)
 Port F Pin 6: Unknown(GPIO)(INPUT)
 Port F Pin 7: Unknown(GPIO)(INPUT)
 
