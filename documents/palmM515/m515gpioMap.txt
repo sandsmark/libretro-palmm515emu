@@ -28,7 +28,7 @@ Port B Pin 3: CSC1/RAS1(chip select line)
 Port B Pin 4: CSD0/CAS0(chip select line)
 Port B Pin 5: Unknown(GPIO)(OUTPUT)(not used as a chip select line)
 Port B Pin 6: Alarm LED(xored with the charging state, set high to enable LED when not docked, set low to enable LED when docked)
-Port B Pin 7: Unknown(likely audio out)(PWMO1)
+Port B Pin 7: Audio Out(untested)(PWMO1)
 
 Port C Pin 0: Unknown(GPIO)(INPUT)
 Port C Pin 1: Unknown(GPIO)(INPUT)
