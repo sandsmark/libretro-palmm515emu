@@ -109,7 +109,7 @@ void pdiUsbD12SetRegister(bool address, uint8_t value){
             break;
 
          default:
-            debugLog("USB unknown command, address:0x%01X, value:0x%02X\n", address, value);
+//            debugLog("USB unknown command, address:0x%01X, value:0x%02X\n", address, value);
             break;
       }
    }

@@ -1,3 +1,5 @@
+#pragma once
+
 //declare I/O port functions in advance
 static uint8_t getPortAValue();
 static uint8_t getPortBValue();
@@ -36,10 +38,12 @@ static void clearIprIsrBit(uint32_t interruptBit){
 static uint16_t spi1RxFifoRead(){
    uint16_t value = spi1RxFifo[spi1RxReadPosition];
    spi1RxReadPosition = (spi1RxReadPosition + 1) % 9;
+   debugLog("reading from spirx1 fifo: %x\n", value);
    return value;
 }
 
 static void spi1RxFifoWrite(uint16_t value){
+   debugLog("writing to spirx1 fifo: %x\n", value);
    spi1RxFifo[spi1RxWritePosition] = value;
    spi1RxWritePosition = (spi1RxWritePosition + 1) % 9;
 }
@@ -54,10 +58,12 @@ static uint8_t spi1RxFifoEntrys(){
 static uint16_t spi1TxFifoRead(){
    uint16_t value = spi1TxFifo[spi1TxReadPosition];
    spi1TxReadPosition = (spi1TxReadPosition + 1) % 9;
+   debugLog("reading from spitx1 fifo: %x\n", value);
    return value;
 }
 
 static void spi1TxFifoWrite(uint16_t value){
+   debugLog("writing to spitx1 fifo: %x\n", value);
    spi1TxFifo[spi1TxWritePosition] = value;
    spi1TxWritePosition = (spi1TxWritePosition + 1) % 9;
 }
@@ -323,6 +329,7 @@ static void setSpiCont1(uint16_t value){
          uint16_t currentTxFifoEntry = spi1TxFifoRead();
          uint16_t newRxFifoEntry = 0;
 
+         debugLog("reading from sd card %x\n", bitCount);
          for(uint8_t bits = 0; bits < bitCount; bits++){
             newRxFifoEntry |= sdCardExchangeBit(currentTxFifoEntry & startBit);
             newRxFifoEntry <<= 1;
@@ -336,6 +343,7 @@ static void setSpiCont1(uint16_t value){
          if(spi1RxFifoEntrys() == 0)
             spi1RxFifoRead();
       }
+      value = ~0x0100;
    }
 
    registerArrayWrite16(SPICONT1, value);
@@ -345,6 +353,7 @@ static void setSpiCont2(uint16_t value){
    //the ENABLE bit must be set before the transfer and in the transfer command
    //important bits are ENABLE, XCH, IRQ, IRQEN and BITCOUNT
    uint16_t oldSpiCont2 = registerArrayRead16(SPICONT2);
+//   debugLog("SPIcont2 write, old value:0x%04X, value:0x%04X\n", oldSpiCont2, value);
 
    //force or clear an interrupt
    if((value & 0x00C0) == 0x00C0)
@@ -376,8 +385,8 @@ static void setSpiCont2(uint16_t value){
       }
       registerArrayWrite16(SPIDATA2, spi2Data);
 
-      //debugLog("SPI2 transfer, ENABLE:%s, XCH:%s, IRQ:%s, IRQEN:%s, BITCOUNT:%d\n", boolString(value & 0x0200), boolString(value & 0x0100), boolString(value & 0x0080), boolString(value & 0x0400), (value & 0x000F) + 1);
-      //debugLog("SPI2 transfer, before:0x%04X, after:0x%04X, PC:0x%08X\n", oldSpi2Data, spi2Data, m68k_get_reg(NULL, M68K_REG_PPC));
+//      debugLog("SPI2 transfer, ENABLE:%s, XCH:%s, IRQ:%s, IRQEN:%s, BITCOUNT:%d\n", boolString(value & 0x0200), boolString(value & 0x0100), boolString(value & 0x0080), boolString(value & 0x0400), (value & 0x000F) + 1);
+//      debugLog("SPI2 transfer, before:0x%04X, after:0x%04X, PC:0x%08X\n", oldSpi2Data, spi2Data, m68k_get_reg(NULL, M68K_REG_PPC));
 
       //unset XCH, transfers are instant since timing is not emulated
       value &= 0xFEFF;
@@ -507,10 +516,16 @@ static uint8_t getPortDInputPinValues(){
    uint8_t requestedRow = ~getPortKValue();
    uint8_t portDInputValues = 0x00;
 
-   //portDInputValues |= 0x80;//battery dead bit, dont know the proper level to set this
+   // if this is set, it means the battery is dead, so don't
+//   portDInputValues |= 0x80;//battery dead bit, dont know the proper level to set this
 
-   if(palmSdCard.flashChip.data)
+   // don't set this immediately, then it will immediately try to query it
+   if(palmSdCard.flashChip.data) {
+//      debugLog("have sd card\n");
       portDInputValues |= 0x20;
+   } else {
+//      debugLog("don't have sd card\n");
+   }
 
    //kbd row 0
    if(requestedRow & 0x20)
@@ -547,10 +562,13 @@ static uint8_t getPortDValue(){
    uint8_t portDData = registerArrayRead8(PDDATA);
    uint8_t portDDir = registerArrayRead8(PDDIR);
    uint8_t portDPolarity = registerArrayRead8(PDPOL);
+//      portDValue |= 0x20;
 
    portDValue ^= portDPolarity;//only input polarity is affected by PDPOL
    portDValue &= ~portDDir;//only use above pin values for inputs, port d allows using special function pins as inputs while active unlike other ports
    portDValue |= portDData & portDDir;//if a pin is an output and has its data bit set return that too
+
+   debugLog("d: %x k value: %x\n", portDValue, ~getPortKValue());
 
    return portDValue;
 }

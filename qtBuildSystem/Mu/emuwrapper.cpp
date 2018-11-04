@@ -13,6 +13,7 @@
 #include <vector>
 #include <string>
 #include <stdint.h>
+#include <QDebug>
 
 #if defined(Q_OS_ANDROID)
 #include <android/log.h>
@@ -54,6 +55,7 @@ void frontendHandleDebugPrint(){
       debugStrings.push_back(newDebugString);
       duplicateCallCount.push_back(1);
    }
+   qDebug() << newDebugString;
 #endif
 }
 

@@ -136,6 +136,7 @@ static void checkInterrupts(){
    }
 
    if(activeInterrupts & INT_SPI1){
+      debugLog("spi1 interrupt\n");
       uint8_t spi1IrqLevel = interruptLevelControlRegister >> 12;
       if(intLevel < spi1IrqLevel)
          intLevel = spi1IrqLevel;
@@ -293,16 +294,16 @@ static void checkPortDInterrupts(){
    }
 
    //IRQ2, polarity set in ICR
-   if(portDIrqPins & ~portDDir & 0x20 && (bool)(portDInputValues & 0x20) == (bool)(interruptControlRegister & 0x4000)){
-      if(!(interruptControlRegister & 0x0400) || !(interruptEdgeTriggered & INT_IRQ2))
-         setIprIsrBit(INT_IRQ2);
-      interruptEdgeTriggered |= INT_IRQ2;
-   }
-   else{
+//   if(portDIrqPins & ~portDDir & 0x20 && (bool)(portDInputValues & 0x20) == (bool)(interruptControlRegister & 0x4000)){
+//      if(!(interruptControlRegister & 0x0400) || !(interruptEdgeTriggered & INT_IRQ2))
+//         setIprIsrBit(INT_IRQ2);
+//      interruptEdgeTriggered |= INT_IRQ2;
+//   }
+//   else{
       if(!(interruptControlRegister & 0x0400))
          clearIprIsrBit(INT_IRQ2);
       interruptEdgeTriggered &= ~INT_IRQ2;
-   }
+//   }
 
    //IRQ3, polarity set in ICR
    if(portDIrqPins & ~portDDir & 0x40 && (bool)(portDInputValues & 0x40) == (bool)(interruptControlRegister & 0x2000)){
@@ -394,9 +395,6 @@ uint8_t getHwRegister8(uint32_t address){
 
    address &= 0x00000FFF;
 
-   if(sandboxRunning() && address < 0xE00)
-      printUnknownHwAccess(address, 0, 8, false);
-
    switch(address){
       case PADATA:
          return getPortAValue();
@@ -483,7 +481,7 @@ uint8_t getHwRegister8(uint32_t address){
          //bootloader
          if(address >= 0xE00)
             return registerArrayRead8(address);
-         if(address < 0xE00)
+         if(sandboxRunning())
             printUnknownHwAccess(address, 0, 8, false);
          return 0x00;
    }
@@ -494,9 +492,6 @@ uint16_t getHwRegister16(uint32_t address){
       return 0x0000;
 
    address &= 0x00000FFF;
-
-   if(sandboxRunning() && address < 0xE00)
-      printUnknownHwAccess(address, 0, 16, false);
 
    switch(address){
       case TSTAT1:
@@ -510,15 +505,17 @@ uint16_t getHwRegister16(uint32_t address){
       case PWMC1:
          return getPwmc1();
 
-      case SPIINTCS:
-         debugLog("SPIINTCS read not implented yet\n");
-         return 0x0000;
-
       case SPITEST:
+          debugLog("called spitest, shouldn't happen\n");
          //SSTATUS is unemulated because the datasheet has no descrption of how it works
          return spi1RxFifoEntrys() << 4 | spi1TxFifoEntrys();
 
+      case SPIINTCS:
+         debugLog("called spiintcs, returning %x\n", registerArrayRead16(address));
+         return registerArrayRead16(address);
+//        return 0;
       case SPIRXD:
+         debugLog("spi rxd\n");
          return spi1RxFifoRead();
 
       //32 bit registers accessed as 16 bit
@@ -553,6 +550,9 @@ uint16_t getHwRegister16(uint32_t address){
       case TPRER2:
       case TCTL1:
       case TCTL2:
+      case SPITXD:
+//      case SPIINTCS:
+//      case SPITEST:
       case SPICONT1:
       case SPICONT2:
       case SPIDATA2:
@@ -563,8 +563,8 @@ uint16_t getHwRegister16(uint32_t address){
          //bootloader
          if(address >= 0xE00)
             return registerArrayRead16(address);
-         if(address < 0xE00)
-            printUnknownHwAccess(address, 0, 16, false);
+         if(sandboxRunning())
+            printUnknownHwAccess(address, 0, 8, false);
          return 0x0000;
    }
 }
@@ -574,9 +574,6 @@ uint32_t getHwRegister32(uint32_t address){
       return 0x00000000;
 
    address &= 0x00000FFF;
-
-   if(sandboxRunning() && address < 0xE00)
-      printUnknownHwAccess(address, 0, 32, false);
 
    switch(address){
       //16 bit registers being read as 32 bit
@@ -594,7 +591,7 @@ uint32_t getHwRegister32(uint32_t address){
          //bootloader
          if(address >= 0xE00)
             return registerArrayRead32(address);
-         if(address < 0xE00)
+         if(sandboxRunning())
             printUnknownHwAccess(address, 0, 32, false);
          return 0x00000000;
    }
@@ -606,9 +603,6 @@ void setHwRegister8(uint32_t address, uint8_t value){
       return;
 
    address &= 0x00000FFF;
-
-   if(sandboxRunning() && address < 0xE00)
-      printUnknownHwAccess(address, value, 8, true);
 
    switch(address){
       case SCR:
@@ -739,8 +733,9 @@ void setHwRegister8(uint32_t address, uint8_t value){
          //writeable bootloader region
          if(address >= 0xFC0)
             registerArrayWrite32(address, value);
-         if(address < 0xE00)
+         if(sandboxRunning())
             printUnknownHwAccess(address, value, 8, true);
+
          break;
    }
 }
@@ -750,9 +745,6 @@ void setHwRegister16(uint32_t address, uint16_t value){
       return;
 
    address &= 0x00000FFF;
-
-   if(sandboxRunning() && address < 0xE00)
-      printUnknownHwAccess(address, value, 16, true);
 
    switch(address){
       case RTCIENR:
@@ -903,6 +895,7 @@ void setHwRegister16(uint32_t address, uint16_t value){
          break;
 
       case CSGBA:
+         debugLog("csgba %x -> %x\n", registerArrayRead16(CSGBA),value);
          //sets the starting location of ROM(0x10000000) and the PDIUSBD12 chip
          if((value & 0xFFFE) != registerArrayRead16(CSGBA)){
             setCsgba(value);
@@ -957,18 +950,23 @@ void setHwRegister16(uint32_t address, uint16_t value){
          break;
 
       case SPICONT1:
+         debugLog("called spicont1, writing %x\n", value);
          setSpiCont1(value);
          break;
 
       case SPIINTCS:
-         debugLog("SPIINTCS write not implented yet\n");
+         debugLog("called spiintcs, writing %x\n", value);
+         registerArrayWrite16(address, value);
          break;
 
       case SPITEST:
          debugLog("SPITEST write not implented yet\n");
+         registerArrayWrite16(address, value);
          break;
 
       case SPITXD:
+         debugLog("called spitxd, writing %x\n", value);
+         registerArrayWrite16(address, value);
          //Writing to TxFIFO is permitted as long as TxFIFO is not full, from MC68VZ328UM.pdf
          if(spi1TxFifoEntrys() < 8)
             spi1TxFifoWrite(value);
@@ -997,6 +995,9 @@ void setHwRegister16(uint32_t address, uint16_t value){
          break;
 
       case SPISPC:
+      debugLog("spispc called %x\n", value);
+        registerArrayWrite16(SPIDATA2, value);
+        break;
          //SPI1 timing, unemulated for now
 
       case TCMP1:
@@ -1011,7 +1012,7 @@ void setHwRegister16(uint32_t address, uint16_t value){
          //writeable bootloader region
          if(address >= 0xFC0)
             registerArrayWrite16(address, value);
-         if(address < 0xE00)
+         if(sandboxRunning())
             printUnknownHwAccess(address, value, 16, true);
          break;
    }
@@ -1022,9 +1023,6 @@ void setHwRegister32(uint32_t address, uint32_t value){
       return;
 
    address &= 0x00000FFF;
-
-   if(sandboxRunning() && address < 0xE00)
-      printUnknownHwAccess(address, value, 32, true);
 
    switch(address){
       case RTCTIME:
@@ -1055,13 +1053,14 @@ void setHwRegister32(uint32_t address, uint32_t value){
          //writeable bootloader region
          if(address >= 0xFC0)
             registerArrayWrite32(address, value);
-         if(address < 0xE00)
+         if(sandboxRunning())
             printUnknownHwAccess(address, value, 32, true);
          break;
    }
 }
 
 void resetHwRegisters(){
+   debugLog("resetting registers\n");
    uint32_t oldRtc = registerArrayRead32(RTCTIME);//preserve RTCTIME
    uint16_t oldDayr = registerArrayRead16(DAYR);//preserve DAYR
 
@@ -1212,6 +1211,6 @@ void resetHwRegisters(){
 }
 
 void setRtc(uint16_t days, uint8_t hours, uint8_t minutes, uint8_t seconds){
-   registerArrayWrite32(RTCTIME, hours << 24 & 0x1F000000 | minutes << 16 & 0x003F0000 | seconds & 0x0000003F);
+   registerArrayWrite32(RTCTIME, ((hours << 24) & 0x1F000000) | ((minutes << 16) & 0x003F0000) | (seconds & 0x0000003F));
    registerArrayWrite16(DAYR, days & 0x01FF);
 }

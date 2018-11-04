@@ -12,17 +12,22 @@ static inline void sdCardInvalidFormat(){
 
 
 bool sdCardExchangeBit(bool bit){
+   debugLog("sdcard exchange bit: %x", bit);
    //check validity of incoming bit
    switch(palmSdCard.commandBitsRemaining){
       case 47:
-         if(bit)
+         if(bit) {
+            debugLog("invalid 47 bits remaining\n");
             sdCardInvalidFormat();
+         }
          return true;
 
       case 46:
       case 0:
-         if(!bit)
+         if(!bit) {
+            debugLog("invalid null sd card type\n");
             sdCardInvalidFormat();
+         }
          return true;
    }
 
@@ -40,6 +45,7 @@ bool sdCardExchangeBit(bool bit){
       }
    }
    else{
+      debugLog("need more sd card data");
       //more data still needed
       palmSdCard.command <<= 1;
       palmSdCard.command |= bit;

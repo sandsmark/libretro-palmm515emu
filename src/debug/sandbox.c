@@ -28,7 +28,7 @@ typedef struct{
 
 
 //used to "log out" of the emulator once a test has finished
-static bool inSandbox;
+static bool inSandbox = false;
 
 
 #include "sandboxTrapNumToName.c.h"

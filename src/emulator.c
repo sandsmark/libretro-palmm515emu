@@ -545,22 +545,28 @@ bool emulatorLoadRam(buffer_t buffer){
 }
 
 buffer_t emulatorGetSdCardBuffer(){
+   debugLog("sd card buffer %x\n", palmSdCard.flashChip);
    return palmSdCard.flashChip;
 }
 
 uint32_t emulatorInsertSdCard(buffer_t image){
    //SD card is currently inserted
-   if(palmSdCard.flashChip.data)
+   if(palmSdCard.flashChip.data) {
+      debugLog("already have sd card %x\n", palmSdCard.flashChip.data);
       return EMU_ERROR_RESOURCE_LOCKED;
+   }
 
    palmSdCard.flashChip.data = malloc(image.size);
    if(!palmSdCard.flashChip.data)
       return EMU_ERROR_OUT_OF_MEMORY;
 
-   if(image.data)
+   if(image.data) {
+      debugLog("got data, size: %x at %x\n", image.size, image.data);
       memcpy(palmSdCard.flashChip.data, image.data, image.size);
-   else
+   } else {
+      debugLog("got empty sd card\n");
       memset(palmSdCard.flashChip.data, 0x00, image.size);
+   }
 
    palmSdCard.flashChip.size = image.size;
 
@@ -568,9 +574,12 @@ uint32_t emulatorInsertSdCard(buffer_t image){
 }
 
 void emulatorEjectSdCard(){
+   debugLog("ejecting sd card");
    //clear SD flash chip and controller
-   if(palmSdCard.flashChip.data)
+   if(palmSdCard.flashChip.data) {
+      debugLog("freeing sd card data");
       free(palmSdCard.flashChip.data);
+   }
    memset(&palmSdCard, 0x00, sizeof(palmSdCard));
 }
 
